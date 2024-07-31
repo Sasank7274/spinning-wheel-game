@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Required library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Spinning Wheel Game With Devi</title>
+  </head>
+  <body style="background-color:#DFD48A;">
+    <div>
+     
+      <h3 style="color:Tomato; font-family:merriweather, georgia, 'times new roman', serif;" align="center"><strong>Spin to Discover Your Devi</strong></h3> 
+         <!-- <p align="Center" style="color:Black; font-family:merriweather, georgia, 'times new roman', serif;">Spin the wheel to know</p> -->
+         <p align="Center" style="color:Black; font-family:merriweather, georgia, 'times new roman', serif;">Which form of Devi resonates with you?</p>
+	  <br> 
+      <div>
+        <div align="center">
+          <div id="wheel">
+            <canvas id="canvas" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+      <!--  end row -->
+      <div>
+        <br>
+        <div align="Center">	
+  	<input type="text" id="fname" name="fname" placeholder="Enter your name here"><br><br>
+          <button type="button" onclick="spin()">Spin Now!</button>
+        </div>
+        
+      </div>
+    </div>
+    <!-- end container -->
+    <br>
+  </body>
+<script language="JavaScript">
+  function create_spinner() {
+color_data = ['#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10', '#49C671', '#49C69A',
+                '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98', '#EEB3CF',
+                '#FC4070', '#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10', '#49C671',
+                '#49C69A', '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98',
+		'#EEB3CF', '#FC4070', '#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10',
+                '#49C69A', '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98',
+                ];
+    label_data = ['Gurubhyo', 'Swayambho', 'Swadharini', 'Maha Kalyani', 'Maha Bhadrani','Maheshwari', 
+                  'Nageshwari', 'Vishweshwari','Someshwari', 'Dukha Samhari ', 'Hiranya Garbhini', 'Amrita Varshini', 
+                  'Bhakta Rakshini', 'Saubhagya Dayini', 'Sarva Janani', 'Garbha Dayini', 'Shoonya Vasini', 'Maha Nandini', 
+                  'Vameshwari', 'Karma Palini', 'Yonishwari', 'Linga Roopini', 'Shyama Sundari', 'Trinetrini',
+                  'Sarva Mangali', 'Maha Yogini', 'Klesha Nashini', 'Ugra Roopini', 'Divya Kamini', 'Kala Roopini',
+		  'Trishoola Dharini', 'Yaksha Kamini', 'Mukti Dhyani', 'Maha Devi', 'Shri Shambhavi', 'Maha Shakthi'	 
+                 ];   
+    var color = color_data;
+    var label = label_data;
+    var slices = color.length;
+    var sliceDeg = 360 / slices;
+    var deg = rand(0, 360);
+    var speed = 10;
+    var slowDownRand = 0;
+    var ctx = canvas.getContext('2d');
+    var width = canvas.width; // size
+    var center = width / 2; // center
+    ctx.clearRect(0, 0, width, width);
+    for (var i = 0; i < slices; i++) {
+      ctx.beginPath();
+      ctx.fillStyle = color[i];
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, width / 2, deg2rad(deg), deg2rad(deg + sliceDeg));
+      ctx.lineTo(center, center);
+      ctx.fill();
+      var drawText_deg = deg + sliceDeg / 2;
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(deg2rad(drawText_deg));
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#000000";
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(label[i], 100, 5);
+      ctx.restore();
+      deg += sliceDeg;
+    }
+  }
+  create_spinner();
+  var deg = rand(0, 360);
+  var speed = 10;
+  var ctx = canvas.getContext('2d');
+  var width = canvas.width; // size
+  var center = width / 2; // center
+  var isStopped = false;
+  var lock = false;
+  var slowDownRand = 0;
+
+  function spin() {
+    color_data = ['#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10', '#49C671', '#49C69A',
+                '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98', '#EEB3CF',
+                '#FC4070', '#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10', '#49C671',
+                '#49C69A', '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98',
+		'#EEB3CF', '#FC4070', '#E3B05D', '#DDE35D', '#BFC0AD', '#BFEE10',
+                '#49C69A', '#23D3CB', '#A7D4D2', '#18CBEE', '#E38EE6', '#CD3B98',
+                ];
+    label_data = ['Gurubhyo', 'Swayambho', 'Swadharini', 'Maha Kalyani', 'Maha Bhadrani','Maheshwari', 
+                  'Nageshwari', 'Vishweshwari','Someshwari', 'Dukha Samhari ', 'Hiranya Garbhini', 'Amrita Varshini', 
+                  'Bhakta Rakshini', 'Saubhagya Dayini', 'Sarva Janani', 'Garbha Dayini', 'Shoonya Vasini', 'Maha Nandini', 
+                  'Vameshwari', 'Karma Palini', 'Yonishwari', 'Linga Roopini', 'Shyama Sundari', 'Trinetrini',
+                  'Sarva Mangali', 'Maha Yogini', 'Klesha Nashini','Ugra Roopini', 'Divya Kamini', 'Kala Roopini',
+		'Trishoola Dharini', 'Yaksha Kamini', 'Mukti Dhyani', 'Maha Devi', 'Shri Shambhavi', 'Maha Shakthi'		 
+                 ];      
+    var color = color_data;
+    var label = label_data;
+    var slices = color.length;
+    var sliceDeg = 360 / slices;
+    deg += speed;
+    deg %= 360;
+    var textboxValue = document.getElementById("fname").value;
+    // Increment speed
+    if (!isStopped && speed < 3) {
+      speed = speed + 1 * 0.1;
+    }
+    // Decrement Speed
+    if (isStopped) {
+      if (!lock) {
+        lock = true;
+        slowDownRand = rand(0.994, 0.998);
+      }
+      speed = speed > 0.2 ? speed *= slowDownRand : 0;
+    }
+    // Stopped!
+    if (lock && !speed) {
+      var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
+      ai = (slices + ai) % slices; // Fix negative index
+      //return alert("You got:\n"+ label[ai] ); // Get Array Item from end Degree
+      return swal({
+        title: "Wow!!!! "+ textboxValue,
+        text: "You have the qualities of " + label[ai] ,
+        type: "success",
+        confirmButtonText: "OK",
+        closeOnConfirm: false
+        }).then((value) => {
+  	return redirectToAnotherPage(label[ai]);
+	});          
+    }
+    ctx.clearRect(0, 0, width, width);
+    for (var i = 0; i < slices; i++) {
+      ctx.beginPath();
+      ctx.fillStyle = color[i];
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, width / 2, deg2rad(deg), deg2rad(deg + sliceDeg));
+      ctx.lineTo(center, center);
+      ctx.fill();
+      var drawText_deg = deg + sliceDeg / 2;
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(deg2rad(drawText_deg));
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#000000";
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(label[i], 100, 5);
+      ctx.restore();
+      deg += sliceDeg;
+    }
+    window.requestAnimationFrame(spin);
+    stops()    
+	
+  }
+  var name
+  function redirectToAnotherPage(name) {           
+            
+		switch (name) {
+    		case 'Gurubhyo':
+        		window.location.href = 'https://forms.gle/ua12FJmtJvMSzKWm7';
+        		break;
+    		case 'Swayambho':
+        		window.location.href = 'https://forms.gle/HpByaadHbDDNaw949';
+        		break;
+    		case 'Swadharini':
+        		window.location.href = 'https://forms.gle/EpPafM1rxH1kuAST9';
+        		break;
+    		case 'Maha Kalyani':
+        		window.location.href = 'https://forms.gle/yhyy9hHyTd1Wr7529';
+        		break;
+    		case 'Maha Bhadrani':
+        		window.location.href = 'https://forms.gle/UPRW94hgv6U6wMU19';
+        		break;
+    		case 'Maheshwari':
+        		window.location.href = 'https://forms.gle/6hxDuw7bYGSW55yJ8';
+        		break;
+    		case 'Nageshwari':
+        		window.location.href = 'https://forms.gle/oCoavz9NphcZKds96';
+        		break;
+    		case 'Vishweshwari':
+        		window.location.href = 'https://forms.gle/jwjaaU9HQvjJ7uc89';
+        		break;
+    		case 'Someshwari':
+        		window.location.href = 'https://forms.gle/MhczBZSakU2pr5Kv9';
+        		break;
+    		case 'Dukha Samhari':
+        		window.location.href = 'https://forms.gle/XD4M3vqcay5aDS8j6';
+        		break;
+    		case 'Hiranya Garbhini':
+        		window.location.href = 'https://forms.gle/XHyu8irEMKK6zhnaA';
+        		break;
+    		case 'Amrita Varshini':
+        		window.location.href = 'https://forms.gle/2cWNcjQ4LuC2u7uaA';
+        		break;
+    		case 'Bhakta Rakshini':
+        		window.location.href = 'https://forms.gle/Fmiyq98PdkQppWj77';
+        		break;
+    		case 'Saubhagya Dayini':
+        		window.location.href = 'https://forms.gle/5uvmXSePSe3nv1o17';
+        		break;
+    		case 'Sarva Janani':
+        		window.location.href = 'https://forms.gle/zaUZ9pycWBn2MQF79';
+        		break;
+    		case 'Garbha Dayini':
+        		window.location.href = 'https://forms.gle/8wjdXPrwfJ72mmup6';
+        		break;
+    		case 'Shoonya Vasini':
+        		window.location.href = 'https://forms.gle/eXx3PUJ39uAKEtuk9';
+        		break;
+    		case 'Maha Nandini':
+        		window.location.href = 'https://forms.gle/fBKSjt5Nwh7pGVxq9';
+        		break;
+    		case 'Vameshwari':
+        		window.location.href = 'https://forms.gle/PmBGnT52sebxRmGs8';
+        		break;
+    		case 'Karma Palini':
+        		window.location.href = 'https://forms.gle/SyPQgfaDRvxZTTiR7';
+        		break;
+    		case 'Yonishwari':
+        		window.location.href = 'https://forms.gle/yYedBuebFV7h96TR6';
+        		break;
+    		case 'Shyama Sundari':
+        		window.location.href = 'https://forms.gle/bpdAeWjZVCz5sNvYA';
+        		break;
+    		case 'Trinetrini':
+        		window.location.href = 'https://forms.gle/grYA7W3xUbADSQPM6';
+        		break;
+    		case 'Sarva Mangali':
+        		window.location.href = 'https://forms.gle/jgP3LF4tKufgHd9BA';
+        		break;
+    		case 'Maha Yogini':
+        		window.location.href = 'https://forms.gle/rVxMZWSsL51RdWpv9';
+        		break;
+    		case 'Klesha Nashini':
+        		window.location.href = 'https://forms.gle/sCSsPAgm9bsFRnrd6';
+        		break;
+    		case 'Ugra Roopini':
+        		window.location.href = 'https://forms.gle/DN1WXiz2eJur8xuC7';
+        		break;
+    		case 'Divya Kamini':
+        		window.location.href = 'https://forms.gle/vYfNiPxgygUa1rRJ9';
+        		break;
+    		case 'Kala Roopini':
+        		window.location.href = 'https://forms.gle/CprhofHzTbYiQy7k8';
+        		break;
+    		case 'Trishoola Dharini':
+        		window.location.href = 'https://forms.gle/pYzrZV1W2xSAmpdf9';
+        		break;
+    		case 'Yaksha Kamini':
+        		window.location.href = 'https://forms.gle/1ijaxjCkmXG28UmP7';
+        		break;
+    		case 'Mukti Dhyani':
+        		window.location.href = 'https://forms.gle/NiLeLXxaJPJizykx5';
+        		break;
+    		case 'Maha Devi':
+        		window.location.href = 'https://forms.gle/gJCkkQyxUExLL9zQ9';
+        		break;
+    		case 'Shri Shambhavi':
+        		window.location.href = 'https://forms.gle/KHogaBDvtYSk4tU49';
+        		break;
+    		case 'Maha Shakthi':
+        		window.location.href = 'https://forms.gle/yyBwFqHubeEhi32a6';
+        		break;
+    		default:
+        		// Code to execute if expression doesn't match any case
+		}
+
+        }
+
+  function stops() {
+    isStopped = true;
+  }
+
+  function deg2rad(deg) {
+    return deg * Math.PI / 180;
+  }
+
+  function rand(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+</script>
+</html>
